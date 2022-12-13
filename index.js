@@ -69,19 +69,7 @@ function move(gameState) {
   // Step 1 - Prevent your Battlesnake from moving out of bounds
   const boardWidth = gameState.board.width;
   const boardHeight = gameState.board.height;
-  if (myHead.x === 0) {
-    // Head is one square from left edge, don't move left
-    isMoveSafe.left = false;
-  } else if (myHead.x === boardWidth - 1) {
-    // Head is one square from right edge, don't move right
-    isMoveSafe.right = false;
-  } else if (myHead.y === 0) {
-    // Head is one square from bottom edge, don't move down
-    isMoveSafe.down = false;
-  } else if (myHead.y === boardHeight - 1) {
-    // Head is one square from top edge, don't move up
-    isMoveSafe.up = false;
-  }
+  preventOutOfBounds(myHead, isMoveSafe, boardWidth, boardHeight);
 
   // Prevent Battlesnake from colliding with itself
   const myBody = gameState.you.body;
@@ -134,3 +122,19 @@ runServer({
   move: move,
   end: end,
 });
+
+function preventOutOfBounds(myHead, isMoveSafe, boardWidth, boardHeight) {
+  if (myHead.x === 0) {
+    // Head is one square from left edge, don't move left
+    isMoveSafe.left = false;
+  } else if (myHead.x === boardWidth - 1) {
+    // Head is one square from right edge, don't move right
+    isMoveSafe.right = false;
+  } else if (myHead.y === 0) {
+    // Head is one square from bottom edge, don't move down
+    isMoveSafe.down = false;
+  } else if (myHead.y === boardHeight - 1) {
+    // Head is one square from top edge, don't move up
+    isMoveSafe.up = false;
+  }
+}
