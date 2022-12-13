@@ -48,53 +48,14 @@ function move(gameState) {
     right: true,
   };
 
-  // We've included code to prevent your Battlesnake from moving backwards
   const myHead = gameState.you.body[0];
   const myNeck = gameState.you.body[1];
   const boardWidth = gameState.board.width;
   const boardHeight = gameState.board.height;
 
-  if (myNeck.x < myHead.x) {
-    // Neck is left of head, don't move left
-    isMoveSafe.left = false;
-  } else if (myNeck.x > myHead.x) {
-    // Neck is right of head, don't move right
-    isMoveSafe.right = false;
-  } else if (myNeck.y < myHead.y) {
-    // Neck is below head, don't move down
-    isMoveSafe.down = false;
-  } else if (myNeck.y > myHead.y) {
-    // Neck is above head, don't move up
-    isMoveSafe.up = false;
-  }
-
-  // Prevent your Battlesnake from moving out of bounds
+  preventMovingBackwards();
   preventOutOfBounds();
-
-  // Prevent Battlesnake from colliding with itself
-  const myBody = gameState.you.body;
-  for (let i = 1; i < myBody.length; i++) {
-    const bodyPart = myBody[i];
-    // Check if head is next to any body part
-    if (myHead.x === bodyPart.x) {
-      if (myHead.y + 1 === bodyPart.y) {
-        // Head is below body part, don't move up
-        isMoveSafe.up = false;
-      } else if (myHead.y - 1 === bodyPart.y) {
-        // Head is above body part, don't move down
-        isMoveSafe.down = false;
-      }
-    }
-    if (myHead.y === bodyPart.y) {
-      if (myHead.x - 1 === bodyPart.x) {
-        // Head is right of body part, don't move left
-        isMoveSafe.left = false;
-      } else if (myHead.x + 1 === bodyPart.x) {
-        // Head is left of body part, don't move right
-        isMoveSafe.right = false;
-      }
-    }
-  }
+  preventCollidingWithItself();
 
   // TODO: Step 3 - Prevent your Battlesnake from colliding with other Battlesnakes
   // opponents = gameState.board.snakes;
@@ -114,6 +75,49 @@ function move(gameState) {
 
   console.log(`MOVE ${gameState.turn}: ${nextMove}`);
   return { move: nextMove };
+
+  function preventCollidingWithItself() {
+    const myBody = gameState.you.body;
+    for (let i = 1; i < myBody.length; i++) {
+      const bodyPart = myBody[i];
+      // Check if head is next to any body part
+      if (myHead.x === bodyPart.x) {
+        if (myHead.y + 1 === bodyPart.y) {
+          // Head is below body part, don't move up
+          isMoveSafe.up = false;
+        } else if (myHead.y - 1 === bodyPart.y) {
+          // Head is above body part, don't move down
+          isMoveSafe.down = false;
+        }
+      }
+      if (myHead.y === bodyPart.y) {
+        if (myHead.x - 1 === bodyPart.x) {
+          // Head is right of body part, don't move left
+          isMoveSafe.left = false;
+        } else if (myHead.x + 1 === bodyPart.x) {
+          // Head is left of body part, don't move right
+          isMoveSafe.right = false;
+        }
+      }
+      // TODO: Prevent trapping yourself
+    }
+  }
+
+  function preventMovingBackwards() {
+    if (myNeck.x < myHead.x) {
+      // Neck is left of head, don't move left
+      isMoveSafe.left = false;
+    } else if (myNeck.x > myHead.x) {
+      // Neck is right of head, don't move right
+      isMoveSafe.right = false;
+    } else if (myNeck.y < myHead.y) {
+      // Neck is below head, don't move down
+      isMoveSafe.down = false;
+    } else if (myNeck.y > myHead.y) {
+      // Neck is above head, don't move up
+      isMoveSafe.up = false;
+    }
+  }
 
   function preventOutOfBounds() {
     if (myHead.x === 0) {
