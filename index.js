@@ -57,6 +57,7 @@ function move(gameState) {
   preventOutOfBounds();
   preventCollidingWithItself();
   preventCollidingWithOtherSnakes();
+  preventHeadToHeadCollisions();
   moveTowardsFoodVersion1();
   const distanceToFood = logDistanceToFood();
 
@@ -64,7 +65,6 @@ function move(gameState) {
     const food = gameState.board.food[0];
     const distance = Math.abs(myHead.x - food.x) + Math.abs(myHead.y - food.y);
     return distance;
-    // console.log(`MOVE ${gameState.turn}. Distance to food: ${distance}`);
   }
 
   // Are there any safe moves left?
@@ -85,6 +85,31 @@ function move(gameState) {
   );
 
   return { move: nextMove };
+
+  function preventHeadToHeadCollisions() {
+    const opponents = gameState.board.snakes;
+    for (let i = 0; i < opponents.length; i++) {
+      const opponent = opponents[i];
+      const opponentHead = opponent.body[0];
+
+      if (myHead.y === opponentHead.y) {
+        if (myHead.x - 1 === opponentHead.x + 1) {
+          isMoveSafe.left = false;
+        }
+        if (myHead.x + 1 === opponentHead.x - 1) {
+          isMoveSafe.right = false;
+        }
+      }
+      if (myHead.x === opponentHead.x) {
+        if (myHead.y - 1 === opponentHead.y + 1) {
+          isMoveSafe.down = false;
+        }
+        if (myHead.y + 1 === opponentHead.y - 1) {
+          isMoveSafe.up = false;
+        }
+      }
+    }
+  }
 
   function moveTowardsFoodVersion1() {
     function cancelOtherMovesBut(move) {
