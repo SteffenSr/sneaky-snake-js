@@ -23,7 +23,7 @@ function info() {
     author: "sasquatch",
     color: "#6ce6cd",
     head: "nr-rocket",
-    tail: "nr-booster",
+    tail: "bonhomme",
   };
 }
 
