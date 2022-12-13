@@ -83,8 +83,30 @@ function move(gameState) {
     isMoveSafe.up = false;
   }
 
-  // TODO: Step 2 - Prevent your Battlesnake from colliding with itself
-  // myBody = gameState.you.body;
+  // Prevent Battlesnake from colliding with itself
+  const myBody = gameState.you.body;
+  for (let i = 1; i < myBody.length; i++) {
+    const bodyPart = myBody[i];
+    // Check if head is next to any body part
+    if (myHead.x === bodyPart.x) {
+      if (myHead.y + 1 === bodyPart.y) {
+        // Head is below body part, don't move up
+        isMoveSafe.up = false;
+      } else if (myHead.y - 1 === bodyPart.y) {
+        // Head is above body part, don't move down
+        isMoveSafe.down = false;
+      }
+    }
+    if (myHead.y === bodyPart.y) {
+      if (myHead.x - 1 === bodyPart.x) {
+        // Head is right of body part, don't move left
+        isMoveSafe.left = false;
+      } else if (myHead.x + 1 === bodyPart.x) {
+        // Head is left of body part, don't move right
+        isMoveSafe.right = false;
+      }
+    }
+  }
 
   // TODO: Step 3 - Prevent your Battlesnake from colliding with other Battlesnakes
   // opponents = gameState.board.snakes;
