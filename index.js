@@ -57,6 +57,15 @@ function move(gameState) {
   preventOutOfBounds();
   preventCollidingWithItself();
   preventCollidingWithOtherSnakes();
+  moveTowardsFoodVersion1();
+  const distanceToFood = logDistanceToFood();
+
+  function logDistanceToFood() {
+    const food = gameState.board.food[0];
+    const distance = Math.abs(myHead.x - food.x) + Math.abs(myHead.y - food.y);
+    return distance;
+    // console.log(`MOVE ${gameState.turn}. Distance to food: ${distance}`);
+  }
 
   // Are there any safe moves left?
   const safeMoves = Object.keys(isMoveSafe).filter((key) => isMoveSafe[key]);
@@ -68,13 +77,51 @@ function move(gameState) {
   // Choose a random move from the safe moves
   const nextMove = safeMoves[Math.floor(Math.random() * safeMoves.length)];
 
-  // TODO: Step 4 - Move towards food instead of random, to regain health and survive longer
-  // food = gameState.board.food;
-
+  const gameTurn = `${gameState.turn}`.padEnd(3, " ");
+  const nextMovePadded = `${nextMove}`.padEnd(5, " ");
+  const distanceToFoodPadded = `${distanceToFood}`.padEnd(2, " ");
   console.log(
-    `MOVE ${gameState.turn}: ${nextMove}, pos (${myHead.x}, ${myHead.y})`
+    `MOVE ${gameTurn}: ${nextMovePadded} Dist. to food: ${distanceToFoodPadded}. Pos (${myHead.x}, ${myHead.y})`
   );
+
   return { move: nextMove };
+
+  function moveTowardsFoodVersion1() {
+    function cancelOtherMovesBut(move) {
+      isMoveSafe.up = false;
+      isMoveSafe.down = false;
+      isMoveSafe.left = false;
+      isMoveSafe.right = false;
+      isMoveSafe[move] = true;
+    }
+
+    // get the coordinates of the food
+    const food = gameState.board.food[0];
+    // if food is above battlesnake
+    if (food.y > myHead.y) {
+      if (isMoveSafe.up) {
+        cancelOtherMovesBut("up");
+      }
+    }
+    // if food is below battlesnake
+    if (food.y < myHead.y) {
+      if (isMoveSafe.down) {
+        cancelOtherMovesBut("down");
+      }
+    }
+    // if food is to the left of battlesnake
+    if (food.x < myHead.x) {
+      if (isMoveSafe.left) {
+        cancelOtherMovesBut("left");
+      }
+    }
+    // if food is to the right of battlesnake
+    if (food.x > myHead.x) {
+      if (isMoveSafe.right) {
+        cancelOtherMovesBut("right");
+      }
+    }
+  }
 
   function preventCollidingWithOtherSnakes() {
     const opponents = gameState.board.snakes;
