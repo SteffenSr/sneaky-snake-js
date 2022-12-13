@@ -82,25 +82,7 @@ function move(gameState) {
       const opponent = opponents[i];
       for (let j = 0; j < opponent.body.length; j++) {
         const bodyPart = opponent.body[j];
-        // Check if head is next to any body part
-        if (myHead.x === bodyPart.x) {
-          if (myHead.y + 1 === bodyPart.y) {
-            // Head is below body part, don't move up
-            isMoveSafe.up = false;
-          } else if (myHead.y - 1 === bodyPart.y) {
-            // Head is above body part, don't move down
-            isMoveSafe.down = false;
-          }
-        }
-        if (myHead.y === bodyPart.y) {
-          if (myHead.x - 1 === bodyPart.x) {
-            // Head is right of body part, don't move left
-            isMoveSafe.left = false;
-          } else if (myHead.x + 1 === bodyPart.x) {
-            // Head is left of body part, don't move right
-            isMoveSafe.right = false;
-          }
-        }
+        preventHeadToBodypart(bodyPart);
       }
     }
   }
@@ -109,26 +91,30 @@ function move(gameState) {
     const myBody = gameState.you.body;
     for (let i = 1; i < myBody.length; i++) {
       const bodyPart = myBody[i];
-      // Check if head is next to any body part
-      if (myHead.x === bodyPart.x) {
-        if (myHead.y + 1 === bodyPart.y) {
-          // Head is below body part, don't move up
-          isMoveSafe.up = false;
-        } else if (myHead.y - 1 === bodyPart.y) {
-          // Head is above body part, don't move down
-          isMoveSafe.down = false;
-        }
-      }
-      if (myHead.y === bodyPart.y) {
-        if (myHead.x - 1 === bodyPart.x) {
-          // Head is right of body part, don't move left
-          isMoveSafe.left = false;
-        } else if (myHead.x + 1 === bodyPart.x) {
-          // Head is left of body part, don't move right
-          isMoveSafe.right = false;
-        }
-      }
+      preventHeadToBodypart(bodyPart);
       // TODO: Prevent trapping yourself
+    }
+  }
+
+  function preventHeadToBodypart(bodyPart) {
+    // Check if head is next to any body part
+    if (myHead.x === bodyPart.x) {
+      if (myHead.y + 1 === bodyPart.y) {
+        // Head is below body part, don't move up
+        isMoveSafe.up = false;
+      } else if (myHead.y - 1 === bodyPart.y) {
+        // Head is above body part, don't move down
+        isMoveSafe.down = false;
+      }
+    }
+    if (myHead.y === bodyPart.y) {
+      if (myHead.x - 1 === bodyPart.x) {
+        // Head is right of body part, don't move left
+        isMoveSafe.left = false;
+      } else if (myHead.x + 1 === bodyPart.x) {
+        // Head is left of body part, don't move right
+        isMoveSafe.right = false;
+      }
     }
   }
 
