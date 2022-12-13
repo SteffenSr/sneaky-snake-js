@@ -152,13 +152,16 @@ function move(gameState) {
     if (myHead.x === 0) {
       // Head is one square from left edge, don't move left
       isMoveSafe.left = false;
-    } else if (myHead.x === boardWidth - 1) {
+    }
+    if (myHead.x === boardWidth - 1) {
       // Head is one square from right edge, don't move right
       isMoveSafe.right = false;
-    } else if (myHead.y === 0) {
+    }
+    if (myHead.y === 0) {
       // Head is one square from bottom edge, don't move down
       isMoveSafe.down = false;
-    } else if (myHead.y === boardHeight - 1) {
+    }
+    if (myHead.y === boardHeight - 1) {
       // Head is one square from top edge, don't move up
       isMoveSafe.up = false;
     }
